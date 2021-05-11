@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const Marvel = () => {
-	const [charac, setCharac] = useState();
+	const [charac, setCharac] = useState({});
 
 	useEffect(() => {
 		if (!navigator.onLine) {
@@ -17,11 +17,26 @@ const Marvel = () => {
 		)
 			.then((result) => result.json())
 			.then((result) => {
-				console.log("result", result);
+				setCharac({
+					id: result.data.results[0].id,
+					name: result.data.results[0].name,
+					image:
+						result.data.results[0].thumbnail.path +
+						"." +
+						result.data.results[0].thumbnail.extension,
+				});
+				localStorage.setItem("charac", charac);
 			});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	return <h1>Character</h1>;
+	return (
+		<div>
+			<h1>Character: {charac.name}</h1>
+			<h2>Id: {charac.id}</h2>
+			<img src={charac.image} alt={charac.name}></img>
+		</div>
+	);
 };
 
 export default Marvel;
